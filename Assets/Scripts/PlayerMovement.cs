@@ -6,12 +6,14 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public float speed;
+    [SerializeField] private float velocity = 1.5f;
+    private Rigidbody rb;
 
     public Vector3 movement;
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -21,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     }
     public void OnMovement(InputValue val)
     {
-        
+
         Setmovement(val.Get<Vector2>());
     }
 
@@ -39,6 +41,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump()
     {
-
+        rb.velocity = Vector2.up * velocity;
     }
 }
