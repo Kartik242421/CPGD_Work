@@ -15,13 +15,13 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Jump",
-                    "type": "Button",
-                    "id": "a47048ef-ef14-4965-8c43-222042599c07",
-                    "expectedControlType": "Button",
+                    "name": "Aim",
+                    "type": "Value",
+                    "id": "53ad44ed-d192-4285-a829-e8b8f33d44e1",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -148,12 +148,12 @@
                 },
                 {
                     "name": "",
-                    "id": "b2a94ea3-eb09-469f-8630-7e4682917730",
-                    "path": "<Keyboard>/space",
+                    "id": "c1eeb6e2-ff4d-4132-ad37-6d78367b61a1",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Jump",
+                    "action": "Aim",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

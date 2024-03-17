@@ -6,13 +6,13 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     public float speed;
+    [SerializeField] float turnSpeed = 5f;
     public CharacterController controller; // Reference to the Character Controller
     private PlayerInput playerInput; // Reference to the PlayerInput component
 
     Camera mainCam;
     CameraController cameraController;
 
-    [System.Obsolete]
     void Start()
     {
         mainCam = Camera.main;
@@ -23,22 +23,64 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        PerformMove();
+
+    }
+
+
+
+    private void PerformMove()
+    {
         Vector2 moveInput = GetMovementInput();
-        Vector3 moveDirection = CalculateMoveDirection(moveInput);
+        Vector2 aimInput = GetAimInput();
+
+        Vector3 moveDirection = CalculateMoveDirection(moveInput);  //moveDirection=(rightDir * moveInput.x + upDir * moveInput.y).normalized;
+
+        Vector3 MoveDir = moveDirection * speed * Time.deltaTime; //to move character face direction
 
         // Move the character using Character Controller
-        controller.Move(moveDirection * speed * Time.deltaTime);
+        controller.Move(MoveDir * speed * Time.deltaTime);
 
-        if (moveInput.magnitude != 0 && cameraController != null)  //here we give the value for the x input to change camera rotation
+        Vector3 AimDir = MoveDir;
+
+        if (aimInput.magnitude != 0)
+        {
+            AimDir = StickInputToWorldDir(aimInput);
+        }
+
+        RotateTowards(AimDir);
+        UpdateCamera(moveInput,aimInput);
+    }
+
+    private void UpdateCamera(Vector2 moveInput,Vector2 aimInput)
+    {
+        //player is moving but not aiming, and cameraController exists
+        if (moveInput.magnitude != 0 && aimInput.magnitude==0 && cameraController!=null)  //here we give the value for the x input to change camera rotation
         {
             cameraController.AddYawInput(moveInput.x);
         }
     }
 
+    private void RotateTowards(Vector3 AimDir)
+    {
+        if (AimDir.magnitude != 0)
+        {
+            float turnLerpAlpha = turnSpeed * Time.deltaTime;
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(AimDir, Vector3.up), turnLerpAlpha);
+        }
+    }
+
+
     private Vector2 GetMovementInput()
     {
         // Get movement input from PlayerInput component
         return playerInput.actions["PlayerActionMap/Movement"].ReadValue<Vector2>();
+    }
+
+    private Vector2 GetAimInput()
+    {
+        // Get movement input from PlayerInput component
+        return playerInput.actions["PlayerActionMap/Aim"].ReadValue<Vector2>();
     }
 
     private Vector3 CalculateMoveDirection(Vector2 moveInput)
@@ -52,5 +94,14 @@ public class PlayerMovement : MonoBehaviour
         moveDirection.y = 0f;
 
         return moveDirection;
+    }
+
+    private Vector3 StickInputToWorldDir(Vector2 inputVal)
+    {
+        Vector3 rightDir = mainCam.transform.right;
+        Vector3 upDir = Vector3.Cross(rightDir, Vector3.up);
+        Vector3 worldDirection = (rightDir * inputVal.x + upDir * inputVal.y).normalized;
+
+        return worldDirection;
     }
 }

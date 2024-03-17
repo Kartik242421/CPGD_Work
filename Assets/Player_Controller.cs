@@ -37,13 +37,13 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Jump"",
-                    ""type"": ""Button"",
-                    ""id"": ""a47048ef-ef14-4965-8c43-222042599c07"",
-                    ""expectedControlType"": ""Button"",
+                    ""name"": ""Aim"",
+                    ""type"": ""Value"",
+                    ""id"": ""53ad44ed-d192-4285-a829-e8b8f33d44e1"",
+                    ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -170,12 +170,12 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""b2a94ea3-eb09-469f-8630-7e4682917730"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""id"": ""c1eeb6e2-ff4d-4132-ad37-6d78367b61a1"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Jump"",
+                    ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -187,7 +187,7 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
         // PlayerActionMap
         m_PlayerActionMap = asset.FindActionMap("PlayerActionMap", throwIfNotFound: true);
         m_PlayerActionMap_Movement = m_PlayerActionMap.FindAction("Movement", throwIfNotFound: true);
-        m_PlayerActionMap_Jump = m_PlayerActionMap.FindAction("Jump", throwIfNotFound: true);
+        m_PlayerActionMap_Aim = m_PlayerActionMap.FindAction("Aim", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -250,13 +250,13 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_PlayerActionMap;
     private List<IPlayerActionMapActions> m_PlayerActionMapActionsCallbackInterfaces = new List<IPlayerActionMapActions>();
     private readonly InputAction m_PlayerActionMap_Movement;
-    private readonly InputAction m_PlayerActionMap_Jump;
+    private readonly InputAction m_PlayerActionMap_Aim;
     public struct PlayerActionMapActions
     {
         private @Player_Controller m_Wrapper;
         public PlayerActionMapActions(@Player_Controller wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_PlayerActionMap_Movement;
-        public InputAction @Jump => m_Wrapper.m_PlayerActionMap_Jump;
+        public InputAction @Aim => m_Wrapper.m_PlayerActionMap_Aim;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActionMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -269,9 +269,9 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
             @Movement.started += instance.OnMovement;
             @Movement.performed += instance.OnMovement;
             @Movement.canceled += instance.OnMovement;
-            @Jump.started += instance.OnJump;
-            @Jump.performed += instance.OnJump;
-            @Jump.canceled += instance.OnJump;
+            @Aim.started += instance.OnAim;
+            @Aim.performed += instance.OnAim;
+            @Aim.canceled += instance.OnAim;
         }
 
         private void UnregisterCallbacks(IPlayerActionMapActions instance)
@@ -279,9 +279,9 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
             @Movement.started -= instance.OnMovement;
             @Movement.performed -= instance.OnMovement;
             @Movement.canceled -= instance.OnMovement;
-            @Jump.started -= instance.OnJump;
-            @Jump.performed -= instance.OnJump;
-            @Jump.canceled -= instance.OnJump;
+            @Aim.started -= instance.OnAim;
+            @Aim.performed -= instance.OnAim;
+            @Aim.canceled -= instance.OnAim;
         }
 
         public void RemoveCallbacks(IPlayerActionMapActions instance)
@@ -302,6 +302,6 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
     public interface IPlayerActionMapActions
     {
         void OnMovement(InputAction.CallbackContext context);
-        void OnJump(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
     }
 }
