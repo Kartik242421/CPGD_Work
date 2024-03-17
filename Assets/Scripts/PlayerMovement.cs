@@ -5,31 +5,35 @@ using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float speed;
+    [SerializeField] float speed=5f;
     [SerializeField] float turnSpeed = 5f;
+    [SerializeField] float animTurnSpeed=5f;
+
     public CharacterController controller; // Reference to the Character Controller
     private PlayerInput playerInput; // Reference to the PlayerInput component
 
     Camera mainCam;
     CameraController cameraController;
 
+    Animator animator;
+
+    float animatorTurnSpeed;
     void Start()
     {
         mainCam = Camera.main;
         controller = GetComponent<CharacterController>(); // Assigning the Character Controller reference
         playerInput = GetComponent<PlayerInput>(); // Assigning the PlayerInput component
         cameraController = FindObjectOfType<CameraController>();
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        PerformMove();
+        PerfromMoveAndAim();
 
     }
 
-
-
-    private void PerformMove()
+    private void PerfromMoveAndAim()
     {
         Vector2 moveInput = GetMovementInput();
         Vector2 aimInput = GetAimInput();
@@ -38,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 MoveDir = moveDirection * speed * Time.deltaTime; //to move character face direction
 
+        Debug.Log(moveInput);
         // Move the character using Character Controller
         controller.Move(MoveDir * speed * Time.deltaTime);
 
@@ -50,6 +55,14 @@ public class PlayerMovement : MonoBehaviour
 
         RotateTowards(AimDir);
         UpdateCamera(moveInput,aimInput);
+
+        //dot product for animation movement
+        float forward = Vector3.Dot(MoveDir, transform.forward);
+        float right = Vector3.Dot(MoveDir, transform.right);
+
+        animator.SetFloat("ForwardSpeed", forward);
+        animator.SetFloat("RightSpeed", right);
+
     }
 
     private void UpdateCamera(Vector2 moveInput,Vector2 aimInput)
@@ -63,11 +76,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void RotateTowards(Vector3 AimDir)
     {
+        float currentTurnSpeed = 0f;
         if (AimDir.magnitude != 0)
         {
+            Quaternion prevRot = transform.rotation; //for aim rotation blend tree 2 
             float turnLerpAlpha = turnSpeed * Time.deltaTime;
             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(AimDir, Vector3.up), turnLerpAlpha);
+
+            Quaternion currentRot = transform.rotation;  //for aim rotation blend tree 2 
+            float Dir = Vector3.Dot(AimDir, transform.right) > 0 ? 1 : -1; //if bigger then  else -1
+            float rotationDelta = Quaternion.Angle(prevRot, currentRot) * Dir; //
+            currentTurnSpeed = rotationDelta / Time.deltaTime;
         }
+        animatorTurnSpeed = Mathf.Lerp(animatorTurnSpeed, currentTurnSpeed, Time.deltaTime * animTurnSpeed);
+
+        animator.SetFloat("TurningSpeed", animatorTurnSpeed);//
     }
 
 
