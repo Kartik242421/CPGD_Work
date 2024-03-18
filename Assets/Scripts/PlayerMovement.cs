@@ -8,6 +8,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float speed=5f;
     [SerializeField] float turnSpeed = 5f;
     [SerializeField] float animTurnSpeed=5f;
+    
+    [Header("Inventory")]
+    [SerializeField] InventoryComponent inventoryComponent;
 
     public CharacterController controller; // Reference to the Character Controller
     private PlayerInput playerInput; // Reference to the PlayerInput component
@@ -33,10 +36,22 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    void SwitchWeapon()
+    {
+        inventoryComponent.NextWeapon();
+    }
+
+
     private void PerfromMoveAndAim()
     {
-        Vector2 moveInput = GetMovementInput();
-        Vector2 aimInput = GetAimInput();
+        Vector2 moveInput = GetMovementInput(); //left stick
+        Vector2 aimInput = GetAimInput(); //right stick
+        float weaponSwitchInput = GetWeaponSwitchInput();
+
+        if (weaponSwitchInput == 1f)
+        {
+            SwitchWeapon();
+        }
 
         Vector3 moveDirection = CalculateMoveDirection(moveInput);  //moveDirection=(rightDir * moveInput.x + upDir * moveInput.y).normalized;
 
@@ -104,6 +119,12 @@ public class PlayerMovement : MonoBehaviour
     {
         // Get movement input from PlayerInput component
         return playerInput.actions["PlayerActionMap/Aim"].ReadValue<Vector2>();
+    }
+
+    private float GetWeaponSwitchInput()
+    {
+        // Get movement input from PlayerInput component
+        return playerInput.actions["PlayerActionMap/WeaponSwitch"].triggered? 1f:0f;
     }
 
     private Vector3 CalculateMoveDirection(Vector2 moveInput)

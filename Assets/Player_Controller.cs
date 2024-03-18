@@ -44,6 +44,15 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""WeaponSwitch"",
+                    ""type"": ""Button"",
+                    ""id"": ""8084f8bb-16e9-4cf4-863a-909d9bb2ca73"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -189,6 +198,28 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
                     ""action"": ""Aim"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7bcec434-bd77-43e4-bee1-aff211261be4"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7759900e-318f-4cfa-9709-9544c9f903dc"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponSwitch"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -199,6 +230,7 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
         m_PlayerActionMap = asset.FindActionMap("PlayerActionMap", throwIfNotFound: true);
         m_PlayerActionMap_Movement = m_PlayerActionMap.FindAction("Movement", throwIfNotFound: true);
         m_PlayerActionMap_Aim = m_PlayerActionMap.FindAction("Aim", throwIfNotFound: true);
+        m_PlayerActionMap_WeaponSwitch = m_PlayerActionMap.FindAction("WeaponSwitch", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -262,12 +294,14 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
     private List<IPlayerActionMapActions> m_PlayerActionMapActionsCallbackInterfaces = new List<IPlayerActionMapActions>();
     private readonly InputAction m_PlayerActionMap_Movement;
     private readonly InputAction m_PlayerActionMap_Aim;
+    private readonly InputAction m_PlayerActionMap_WeaponSwitch;
     public struct PlayerActionMapActions
     {
         private @Player_Controller m_Wrapper;
         public PlayerActionMapActions(@Player_Controller wrapper) { m_Wrapper = wrapper; }
         public InputAction @Movement => m_Wrapper.m_PlayerActionMap_Movement;
         public InputAction @Aim => m_Wrapper.m_PlayerActionMap_Aim;
+        public InputAction @WeaponSwitch => m_Wrapper.m_PlayerActionMap_WeaponSwitch;
         public InputActionMap Get() { return m_Wrapper.m_PlayerActionMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -283,6 +317,9 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
             @Aim.started += instance.OnAim;
             @Aim.performed += instance.OnAim;
             @Aim.canceled += instance.OnAim;
+            @WeaponSwitch.started += instance.OnWeaponSwitch;
+            @WeaponSwitch.performed += instance.OnWeaponSwitch;
+            @WeaponSwitch.canceled += instance.OnWeaponSwitch;
         }
 
         private void UnregisterCallbacks(IPlayerActionMapActions instance)
@@ -293,6 +330,9 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
             @Aim.started -= instance.OnAim;
             @Aim.performed -= instance.OnAim;
             @Aim.canceled -= instance.OnAim;
+            @WeaponSwitch.started -= instance.OnWeaponSwitch;
+            @WeaponSwitch.performed -= instance.OnWeaponSwitch;
+            @WeaponSwitch.canceled -= instance.OnWeaponSwitch;
         }
 
         public void RemoveCallbacks(IPlayerActionMapActions instance)
@@ -314,5 +354,6 @@ public partial class @Player_Controller: IInputActionCollection2, IDisposable
     {
         void OnMovement(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
+        void OnWeaponSwitch(InputAction.CallbackContext context);
     }
 }
