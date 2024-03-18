@@ -36,6 +36,11 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    public void AttackPoint()
+    {
+        inventoryComponent.GetActiveWeapon().Attack();
+    }
+
     void StartSwitchWeapon()
     {
         animator.SetTrigger("switchWeapon");
@@ -74,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 MoveDir = moveDirection * speed * Time.deltaTime; //to move character face direction
 
-        Debug.Log(moveInput);
+        //Debug.Log(moveInput);
         // Move the character using Character Controller
         controller.Move(MoveDir * speed * Time.deltaTime);
 
