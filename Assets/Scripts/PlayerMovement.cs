@@ -36,9 +36,15 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
-    void SwitchWeapon()
+    void StartSwitchWeapon()
+    {
+        animator.SetTrigger("switchWeapon");
+    }
+
+    public void SwitchWeapon()  //this method is being accessed in the event system of Weapon_Put_Away as  it check the animator and all components in the player script
     {
         inventoryComponent.NextWeapon();
+
     }
 
 
@@ -48,9 +54,20 @@ public class PlayerMovement : MonoBehaviour
         Vector2 aimInput = GetAimInput(); //right stick
         float weaponSwitchInput = GetWeaponSwitchInput();
 
-        if (weaponSwitchInput == 1f)
+
+        if (aimInput.magnitude > 0)
         {
-            SwitchWeapon();
+            animator.SetBool("attacking", true);
+        }
+        else
+        {
+            animator.SetBool("attacking", false);
+        }
+
+
+        if (weaponSwitchInput == 1f)   //performs weapon switch for joystick
+        {            
+                StartSwitchWeapon();           
         }
 
         Vector3 moveDirection = CalculateMoveDirection(moveInput);  //moveDirection=(rightDir * moveInput.x + upDir * moveInput.y).normalized;
