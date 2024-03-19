@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,11 @@ public class PlayerMovement : MonoBehaviour
     
     [Header("Inventory")]
     [SerializeField] InventoryComponent inventoryComponent;
+
+    [Header("HealthAndDamage")]
+    [SerializeField] HealthComponent healthComponent;
+    [SerializeField] PlayerHealthBar healthBar;
+
 
     public CharacterController controller; // Reference to the Character Controller
     private PlayerInput playerInput; // Reference to the PlayerInput component
@@ -28,6 +34,14 @@ public class PlayerMovement : MonoBehaviour
         playerInput = GetComponent<PlayerInput>(); // Assigning the PlayerInput component
         cameraController = FindObjectOfType<CameraController>();
         animator = GetComponent<Animator>();
+
+        healthComponent.onHealthChange += HealthChanged;
+        healthComponent.BroadcastHealthValueImmeidately();
+    }
+
+    private void HealthChanged(float health, float delta, float maxHealth)
+    {
+        healthBar.UpdateHealth(health,delta,maxHealth);
     }
 
     void Update()

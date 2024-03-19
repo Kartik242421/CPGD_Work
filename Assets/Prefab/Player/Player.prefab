@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 3746161344471441764}
   - component: {fileID: 7168658847789529197}
   - component: {fileID: 4476671257373925631}
+  - component: {fileID: 5616458195157220786}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -109,6 +110,9 @@ MonoBehaviour:
   speed: 8
   turnSpeed: 7
   animTurnSpeed: 10
+  inventoryComponent: {fileID: 4476671257373925631}
+  healthComponent: {fileID: 5616458195157220786}
+  healthBar: {fileID: 0}
   controller: {fileID: 6941761093978500491}
 --- !u!114 &3746161344471441764
 MonoBehaviour:
@@ -195,12 +199,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initWeaponsPrefabs:
-  - {fileID: 3332528076611939254, guid: f47fa5fd6f8a9d5418823c5f156ca92f, type: 3}
   - {fileID: 3331406445510306034, guid: 43ef3c874638f954c804fee5d03d1590, type: 3}
+  - {fileID: 3332528076611939254, guid: f47fa5fd6f8a9d5418823c5f156ca92f, type: 3}
   defaultWeaponSlot: {fileID: 7661101716704560582}
   weaponSlots:
   - {fileID: 8780954394113691440}
   - {fileID: 6196587747168847684}
+--- !u!114 &5616458195157220786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6675810379580897322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0c31a3843a451c4bab6d5931cea6a8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 100
+  maxhealth: 100
 --- !u!1 &8130406503998079144
 GameObject:
   m_ObjectHideFlags: 0

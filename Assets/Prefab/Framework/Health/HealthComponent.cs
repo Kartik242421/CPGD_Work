@@ -17,6 +17,11 @@ public class HealthComponent : MonoBehaviour
     public event OnTakeDamage onTakeDamage;
     public event OnHealthEmpty onHealthEmpty;
 
+    public void BroadcastHealthValueImmeidately()
+    {
+        onHealthChange?.Invoke(health, 0, maxhealth);
+
+    }
 
 
     public void changeHealth(float amt)
